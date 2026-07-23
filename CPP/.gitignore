@@ -1,0 +1,22 @@
+# CMake and compiler output
+build/
+build-*/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+*.exe
+*.pdb
+
+# Local editor/workspace state (keep shared Obsidian settings)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
