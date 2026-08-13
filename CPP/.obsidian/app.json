@@ -2,5 +2,8 @@
   "alwaysUpdateLinks": true,
   "newFileLocation": "root",
   "showUnsupportedFiles": true,
-  "useMarkdownLinks": false
+  "useMarkdownLinks": false,
+  "vimMode": true,
+  "defaultViewMode": "preview",
+  "livePreview": false
 }
