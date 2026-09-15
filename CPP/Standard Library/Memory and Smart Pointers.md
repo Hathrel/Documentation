@@ -2,6 +2,8 @@
 
 Prefer automatic storage and value members. Dynamic allocation is justified by dynamic lifetime, polymorphism, large/recursive structures, or stable indirection—not merely because an object is large.
 
+A smart pointer owns; a raw pointer or reference commonly observes. Accept `T&` or `T*` unless a function actually transfers, shares, or reseats ownership.
+
 ## `unique_ptr`
 
 ```cpp
@@ -22,6 +24,8 @@ if (auto locked = observer.lock()) locked->visit();
 
 `shared_ptr` uses reference-counted shared ownership. It adds allocation/atomic bookkeeping and can leak cycles. Break ownership cycles with `weak_ptr`. Do not create two independent `shared_ptr`s from the same raw pointer. Use `enable_shared_from_this` only when an object already managed by a `shared_ptr` must issue another shared owner.
 
+The shared control block owns bookkeeping and a deleter; an aliasing shared pointer may own one object while pointing at a subobject. Never create independent shared pointers from the same raw pointer. Reference counting manages lifetime but does not make the pointed-to state thread-safe.
+
 ## Allocators and polymorphic memory resources
 
 Standard containers accept allocators. `<memory_resource>` provides `std::pmr` types and resources such as monotonic and pool resources for allocation-policy control. Use after profiling; resource lifetimes must exceed all containers using them.
@@ -38,4 +42,3 @@ Standard containers accept allocators. `<memory_resource>` provides `std::pmr` t
 - Return `unique_ptr<T>` for dynamically allocated exclusive ownership.
 
 See [[Language/06 - References, Pointers, and Lifetimes]] and [[Language/11 - Resource Management and RAII]].
-

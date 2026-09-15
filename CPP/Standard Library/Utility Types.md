@@ -2,6 +2,10 @@
 
 These types model common shapes of data and make states explicit.
 
+## Vocabulary types encode states
+
+These types make alternatives visible but do not choose an ownership policy for referenced data. An optional view can still dangle.
+
 ## Optional, variant, any
 
 ```cpp
@@ -17,6 +21,8 @@ std::visit([](const auto& value) { render(value); }, content);
 ```
 
 Prefer `variant` over type-unsafe unions and usually over `any` when alternatives are known. `std::monostate` can represent an empty/default alternative.
+
+`optional::value()` throws when disengaged while `operator*` has a precondition. `variant` holds one active alternative and can rarely become `valueless_by_exception`. `get` throws for the wrong alternative; `get_if` returns a pointer. Prefer variant over `any` for a closed set because visitation can be checked exhaustively.
 
 ## Pair and tuple
 
@@ -42,4 +48,3 @@ auto [name, count] = entry; // structured binding
 - `std::mdspan` (C++23): multidimensional view over data.
 
 Each wrapper has lifetime and cost implications; choose it to express a real state, not to avoid designing a type.
-

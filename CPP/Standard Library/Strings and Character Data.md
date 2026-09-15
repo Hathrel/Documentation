@@ -2,6 +2,12 @@
 
 See [[Language/07 - Strings and Text]] for concepts and lifetime rules.
 
+## Ownership, length, and termination
+
+`std::string` owns a contiguous sequence; `std::string_view` borrows pointer plus length; a C string uses a null terminator. A view need not be terminated, and either sequence may contain embedded nulls.
+
+Mutation can invalidate pointers, iterators, `c_str()` results, and views into a string. Small-string optimization is not a portable capacity or layout guarantee.
+
 ## `std::string`
 
 `std::basic_string<CharT>` is an owning, contiguous, null-terminated character sequence; `std::string` uses `char`.
@@ -21,6 +27,8 @@ if (position != std::string::npos) s.erase(position, 4);
 
 `std::string_view` represents read-only character data and may view literals, strings, or substrings without allocation. It is not necessarily null-terminated. `std::span<const char>` is more explicit when the input is arbitrary bytes/characters rather than semantic text.
 
+Use a view parameter for synchronous read-only access when it will not be stored and no terminator is required. Return an owning string when producing text. Storing or returning a view requires an explicit source-lifetime contract.
+
 ## Character classification
 
 Functions in `<cctype>` such as `std::isdigit` require either `EOF` or a value representable as `unsigned char`:
@@ -39,4 +47,3 @@ They are locale-influenced and not general Unicode utilities.
 - string streams: flexible but relatively heavy.
 
 Prefer `from_chars` for robust parsers and check both the error code and whether all expected input was consumed.
-

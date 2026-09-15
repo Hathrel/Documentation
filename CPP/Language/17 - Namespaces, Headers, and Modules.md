@@ -18,6 +18,21 @@ int helper() { return 42; }
 }
 ```
 
+Namespaces can be reopened across files; all declarations contribute to the same namespace. A namespace alias shortens a long qualified name without importing its members. An inline namespace makes its members available through the enclosing namespace and is commonly used for API versioning.
+
+A using-directive makes all names from a namespace candidates for unqualified lookup, which can create collisions far from the directive. A using-declaration imports selected names and is easier to audit. Neither directive bypasses access control.
+
+Unqualified function calls can also use **argument-dependent lookup** (ADL), which examines namespaces and classes associated with argument types. This enables customization patterns such as:
+
+```cpp
+using std::swap;
+swap(left, right); // finds std fallback or an associated overload
+```
+
+Qualifying the call disables ADL. Generic code should follow the customization point's documented invocation pattern rather than qualifying or not qualifying by habit.
+
+Unnamed namespaces provide translation-unit-local identity. Do not place entities from a public header in an unnamed namespace: every including translation unit would receive a distinct type or object.
+
 ## Headers
 
 A header is a reusable source fragment, normally containing the declarations that several translation units need to share. `#include` is textual: before compilation, the preprocessor replaces the directive with the contents of the named file. The compiler does not compile a header separately in the usual model.
@@ -215,5 +230,19 @@ import math;
 
 Compiler and build-system module workflows still vary. Learn headers first; adopt modules when your toolchain provides a stable supported workflow.
 
+A named module can contain an interface unit, implementation units, and partitions. Only exported declarations form its interface; ordinary declarations remain reachable only within the module. `import` consumes the compiled module interface rather than textually copying source.
+
+```cpp
+export module geometry;
+
+export namespace geo {
+struct Point { double x; double y; };
+double distance(Point, Point);
+}
+```
+
+An implementation unit starts with `module geometry;` and supplies non-exported definitions. Modules do not replace namespaces: modules control compilation visibility and ownership of declarations, while namespaces organize names. They also do not remove the need to understand declarations, definitions, linkage, ODR, or ABI.
+
+A global module fragment (`module;` before the module declaration) can include legacy headers without attaching their declarations to the named module. Header units allow some headers to be imported, subject to toolchain support. Macros are not exported from named modules as ordinary interface declarations, one reason modules reduce macro leakage.
+
 ---
-Links: [[Notes on Headers]]

@@ -1,6 +1,6 @@
 # C++ Field Guide
 
-Welcome. This vault assumes you have never written C++.
+Welcome. This vault assumes you know how to program, but it does not assume that you already understand C++. Familiar control flow and general software terminology move quickly; C++-specific semantics are treated in detail.
 
 ## Start here
 

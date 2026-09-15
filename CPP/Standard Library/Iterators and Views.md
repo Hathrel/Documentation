@@ -2,6 +2,12 @@
 
 An iterator denotes a position. Algorithms operate on iterator/sentinel pairs or ranges.
 
+An iterator is a semantic abstraction, not necessarily a pointer. It may store traversal state, return a proxy, use a distinct sentinel type, or become invalid while the iterator object remains in scope.
+
+## Half-open ranges and sentinels
+
+A range `[first, last)` excludes its end, which must not be dereferenced. In ranges code, a sentinel need only support the required comparison and need not share the iterator's type. `subrange` and `span` usually borrow rather than own.
+
 ## Categories
 
 - Input/output: single-pass read or write.
@@ -28,6 +34,8 @@ auto distance = std::distance(first, last);
 
 Never dereference the end iterator. Increment only while a valid next position exists.
 
+`std::distance` may be linear for non-random-access iterators. Output iterators may be writable without being readable. Proxy references such as `vector<bool>::reference` are not actual `bool&` values; `auto&&` preserves them in generic loops.
+
 ## Range concepts and borrowed lifetimes
 
 C++20 ranges may use a different sentinel type for the end. `std::ranges::begin`, `end`, `size`, `empty`, and `data` provide uniform customization-aware access.
@@ -41,4 +49,3 @@ auto first_ten_even = std::views::iota(0)
 ```
 
 Avoid returning a view that refers to a destroyed local range. `std::span` and `std::string_view` have the same fundamental lifetime concern.
-
